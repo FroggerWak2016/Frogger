@@ -135,5 +135,7 @@ public class Frogger extends JFrame {
 				RowSpec.decode("3dlu:grow"),}));
 		
 	}
-
+	public void sayHello() {
+		System.out.println("Hallo");
+	}
 }
