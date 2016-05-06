@@ -140,4 +140,9 @@ public class Frogger extends JFrame {
 	{
 		return 1;
 	}
+
+	public void sayHello() {
+		System.out.println("Hallo");
+
+	}
 }
