@@ -81,5 +81,14 @@ public class Level {
 		return getDimension().getWidth();
 	}
 	
+	public boolean movePossible(Dimension d) {
+		if(d.getWidth()>=0 &&d.getWidth()<this.getWidth()) {
+			if(d.getHeight()>=0 && d.getHeight()<this.getHeight()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 }

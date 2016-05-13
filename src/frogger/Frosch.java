@@ -30,15 +30,16 @@ public class Frosch {
 		this.row = row;
 	}
 	
-	public void goInDirection(int direction) {
-		switch(direction) {
-		case 37: this.setCol(this.getCol()-1); break;
-		case 38: this.setRow(this.getRow()-1); break;
-		case 39: this.setCol(this.getCol()+1); break;
-		case 40: this.setRow(this.getRow()+1); break;
-		default: System.out.println("none");	
+	public void moveTo(Dimension d) {
+		this.setCol(d.getWidth());
+		this.setRow(d.getHeight());
 	}
+	
+	public Dimension getPosition() {
+		Dimension d = new Dimension(this.getCol(), this.getRow());
+		return d;
 	}
+
 	
 	
 	

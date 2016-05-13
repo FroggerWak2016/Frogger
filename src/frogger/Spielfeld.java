@@ -3,8 +3,6 @@ package frogger;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,8 +81,26 @@ public class Spielfeld extends JPanel {
 	}
 	
 	public void move(int direction) {
-		f.goInDirection(direction);
+		Dimension d = f.getPosition();
+		if(direction == 37) { //Move Left
+			d.setWidth(d.getWidth()-1);
+		}
+		if(direction == 38) { //Move Bottom
+			d.setHeight(d.getHeight()-1);
+		}
+		if(direction == 39) { //Move Right
+			d.setWidth(d.getWidth()+1);
+		}
+		if(direction == 40) { //Move Bottom
+			d.setHeight(d.getHeight()+1);
+		}
+		
+		if(levelWahllevel.movePossible(d)) {
+			f.moveTo(d);
+		}
+		
 		repaint();
+		
 	}
 
 
