@@ -1,6 +1,9 @@
 package frogger;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,13 +16,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class Frogger extends JFrame {
+public class FroggerSettings extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private static Level levelWahllevel;
 
 	/**
 	 * Launch the application.
@@ -28,11 +32,15 @@ public class Frogger extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Frogger frame = new Frogger();
+					FroggerSettings frame = new FroggerSettings();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				Level l1 = new Level(1,"Level 1", "/Level1.txt");
+				levelWahllevel = l1;
+				
 			}
 		});
 	}
@@ -40,14 +48,14 @@ public class Frogger extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Frogger() {
+	public FroggerSettings() {
 
 		/*
 		 * Main frame
 		 */
 		setTitle("Frogger");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 600);
+		setBounds(100, 100, 351, 600);
 
 
 		/*
@@ -59,8 +67,6 @@ public class Frogger extends JFrame {
 		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow(3)"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -92,9 +98,9 @@ public class Frogger extends JFrame {
 		pFroggerSettings.add(pSettingsLevel, "2, 2, fill, fill");
 		pSettingsLevel.setBorder(new TitledBorder(null, "Level", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JPanel pFroggerDifficulty = new JPanel();
-		pFroggerSettings.add(pFroggerDifficulty, "2, 4, fill, fill");
-		pFroggerDifficulty.setBorder(new TitledBorder(null, "Schwierigkeiten", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		JPanel pFroggerAnimal = new JPanel();
+		pFroggerSettings.add(pFroggerAnimal, "2, 4, fill, fill");
+		pFroggerAnimal.setBorder(new TitledBorder(null, "Tiere", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JPanel pSettingsServerLoad = new JPanel();
 		pFroggerSettings.add(pSettingsServerLoad, "2, 6, fill, fill");
@@ -114,6 +120,13 @@ public class Frogger extends JFrame {
 		pSettingsServerLoad.setLayout(fl_pSettingsServerLoad);
 		
 		JButton btnSpeichern = new JButton("Speichern");
+		btnSpeichern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FroggerGameWindow f = new FroggerGameWindow(levelWahllevel);
+				f.setVisible(true);
+				setVisible(false);
+			}
+		});
 		pSettingsServerLoad.add(btnSpeichern, "2, 2, default, fill");
 		
 		JButton btnLaden = new JButton("Laden");
@@ -122,27 +135,6 @@ public class Frogger extends JFrame {
 		JButton btnServerstandLaden = new JButton("Serverstand Laden");
 		pSettingsServerLoad.add(btnServerstandLaden, "2, 6, default, fill");
 		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, "4, 2, fill, fill");
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),},
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				RowSpec.decode("3dlu:grow"),}));
-		
-	}
-	
-	private int getInt()
-	{
-		return 1;
 	}
 
-	public void sayHello() {
-		System.out.println("Hallo");
-
-	}
 }
