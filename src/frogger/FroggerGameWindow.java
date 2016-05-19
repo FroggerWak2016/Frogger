@@ -14,9 +14,13 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class FroggerGameWindow {
+public class FroggerGameWindow extends JFrame {
 
-	private JFrame frame;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//private JFrame frame;
 	public static int BAR_HEIGHT = 40;
 	public static int TILE_SIZE = 25;
 	public static int ROW_HEIGHT = TILE_SIZE;
@@ -49,13 +53,12 @@ public class FroggerGameWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(true);
-		frame.setSize(playgroundWidth, windowHeight);
+		this.setResizable(true);
+		this.setSize(playgroundWidth, windowHeight);
 
-	    frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+	    this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("450px:grow"),},
 			new RowSpec[] {
 				RowSpec.decode("40px:grow"),
@@ -65,11 +68,11 @@ public class FroggerGameWindow {
 		
 		
 		Spielfeld s = new Spielfeld(levelWahllevel, playgroundWidth, playgroundHeight);
-		frame.getContentPane().add(s, "1, 2, fill, fill");
-		frame.setFocusable(true);
-		frame.requestFocus();
-		frame.requestFocusInWindow();
-		frame.addKeyListener(new KeyAdapter() {
+		this.getContentPane().add(s, "1, 2, fill, fill");
+		this.setFocusable(true);
+		this.requestFocus();
+		this.requestFocusInWindow();
+		this.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -81,7 +84,7 @@ public class FroggerGameWindow {
 		
 		
 		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, "1, 1, fill, fill");
+		this.getContentPane().add(panel, "1, 1, fill, fill");
 		
 		JButton btnTes = new JButton("Tes");
 		btnTes.addActionListener(new ActionListener() {
@@ -102,11 +105,6 @@ public class FroggerGameWindow {
 		
 	}
 	
-	public void setVisible(boolean visible) {
-		frame.setVisible(visible);
-	}
-
-
 	
 	
 

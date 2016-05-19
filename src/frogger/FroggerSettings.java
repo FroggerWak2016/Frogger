@@ -3,7 +3,6 @@ package frogger;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -92,18 +91,51 @@ public class FroggerSettings extends JFrame {
 				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
+		//Level Panel
 		JPanel pSettingsLevel = new JPanel();
 		pFroggerSettings.add(pSettingsLevel, "2, 2, fill, fill");
 		pSettingsLevel.setBorder(new TitledBorder(null, "Level", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JPanel pFroggerAnimal = new JPanel();
-		pFroggerSettings.add(pFroggerAnimal, "2, 4, fill, fill");
-		pFroggerAnimal.setBorder(new TitledBorder(null, "Tiere", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		//Tiere Panel
+		JPanel pSettingsAnimal = new JPanel();
+		pFroggerSettings.add(pSettingsAnimal, "2, 4, fill, fill");
+		pSettingsAnimal.setBorder(new TitledBorder(null, "Tiere", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
+		//Spielen Panel
+		JPanel pSettingsStart = new JPanel();
+		pFroggerSettings.add(pSettingsStart, "2,6,fill,fill");
+		pSettingsStart.setBorder(new TitledBorder(null, "Starten", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		FormLayout fl_pSettingsStart = new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_ROWSPEC,});
+		pSettingsStart.setLayout(fl_pSettingsStart);
+		
+		JButton btnSpielStarten = new JButton("Spiel starten");
+		pSettingsStart.add(btnSpielStarten, "2, 2, default, fill");
+		
+		btnSpielStarten.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FroggerGameWindow f = new FroggerGameWindow(levelWahllevel);
+				f.setVisible(true);
+				setVisible(false);				
+			}
+			
+		});
+		
+		// Spielstände Panel
 		JPanel pSettingsServerLoad = new JPanel();
-		pFroggerSettings.add(pSettingsServerLoad, "2, 6, fill, fill");
+		pFroggerSettings.add(pSettingsServerLoad, "2, 8, fill, fill");
 		pSettingsServerLoad.setBorder(new TitledBorder(null, "Spielstände", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		FormLayout fl_pSettingsServerLoad = new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -120,13 +152,6 @@ public class FroggerSettings extends JFrame {
 		pSettingsServerLoad.setLayout(fl_pSettingsServerLoad);
 		
 		JButton btnSpeichern = new JButton("Speichern");
-		btnSpeichern.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				FroggerGameWindow f = new FroggerGameWindow(levelWahllevel);
-				f.setVisible(true);
-				setVisible(false);
-			}
-		});
 		pSettingsServerLoad.add(btnSpeichern, "2, 2, default, fill");
 		
 		JButton btnLaden = new JButton("Laden");

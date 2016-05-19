@@ -1,10 +1,16 @@
 package frogger;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public class Frosch {
 
 	private int col;
 	private int row;
 	private String path = "/frosch.png";
+	BufferedImage bgImage;
 	
 	public int getCol() {
 		return col;
@@ -24,10 +30,11 @@ public class Frosch {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public Frosch(int col, int row) {
+	public Frosch(int col, int row) throws IOException {
 		super();
 		this.col = col;
 		this.row = row;
+		this.bgImage = ImageIO.read(this.getClass().getResource(this.getPath())).getSubimage(0, 0, 32, 32);
 	}
 	
 	public void moveTo(Dimension d) {

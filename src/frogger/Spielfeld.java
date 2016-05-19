@@ -42,7 +42,12 @@ public class Spielfeld extends JPanel {
 		this.levelWahllevel = levelWahllevel;
 		
 		System.out.println(levelWahllevel.getHeight()-1);
-		f = new Frosch(10, levelWahllevel.getHeight()-1);
+		try {
+			f = new Frosch(10, levelWahllevel.getHeight()-1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

@@ -11,6 +11,8 @@ public static final int TILEWIDTH = 25, TILEHEIGHT = 25;
 
   private BufferedImage[] tiles;
 
+
+  
   public TileSet(String path, int sizeX, int sizeY) {
     tiles = new BufferedImage[sizeX * sizeY];
     BufferedImage tileSet;
