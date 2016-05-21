@@ -5,30 +5,39 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
+
+
+
 public class Spielfeld extends JPanel {
 
-	
+	final Lock lock = new ReentrantLock();
 	private static final long serialVersionUID = 1L;
 
-	
+	ArrayList<Thread> treads = new ArrayList<Thread>();
 	public static int FELDSEITE = 32;
 	public static int FELDER_X = 15;
 	public static int FELDER_Y = 17;
 	
-	ArrayList<Thread> threads = new ArrayList<Thread>();
-	ArrayList<Auto> autos = new ArrayList<Auto>();
+	public Spielfenster SPIELFENSTER;
+	
+	private ArrayList<Thread> threads = new ArrayList<Thread>();
+	private ArrayList<Auto> autos = new ArrayList<Auto>();
 	
 	public boolean bInLevel = false;
 
 	public boolean alive = true;
 	
 	private ArrayList<ArrayList<Feld>> alStructure = new ArrayList<ArrayList<Feld>>();
-	ArrayList<Integer> alReihenMitWasser = new ArrayList<Integer>();
-	ArrayList<Integer> alReihenMitStrasse = new ArrayList<Integer>();
+	private ArrayList<Integer> alReihenMitWasser = new ArrayList<Integer>();
+	private ArrayList<Integer> alReihenMitStrasse = new ArrayList<Integer>();
 	
 	private BufferedImage grass;
 	private BufferedImage wasser;
@@ -40,8 +49,9 @@ public class Spielfeld extends JPanel {
 	
 	private boolean bLevelOk;
 	
-	public Spielfeld() {
+	public Spielfeld(Spielfenster spielfenster) {
 		
+		this.SPIELFENSTER = spielfenster;
 		// Hintergrundbilder laden
 		try {
 			grass = ImageIO.read(this.getClass().getResource("/backgrounds/grass.gif")).getSubimage(0, 0, 32, 32);
@@ -74,7 +84,8 @@ public class Spielfeld extends JPanel {
 			
 			//Autos
 			for(Auto a : autos) {
-				g2.drawImage(a.getbBild(), a.getX(), a.getY(), 64, 32, null);
+
+				g2.drawImage(auto, a.getX(), a.getY(), 64, 32, null);
 			}
 			
 		} else {
@@ -91,7 +102,10 @@ public class Spielfeld extends JPanel {
 	// Liest txt Datei ein und füllt ein mehrdimensionales Array mit Feldern
 	public void baueLevel(int iLevel) {
 		
+		lock.lock();
 		autos.clear();
+		lock.unlock();
+		
 		String[] sStructureAsArray = Utils.loadFileAsString("/level/level_"+iLevel+".txt").split("\\s");
 		
 		for(int y = 0; y < Spielfeld.FELDER_Y; y++) {
@@ -113,8 +127,15 @@ public class Spielfeld extends JPanel {
 		}
 		 
 		bLevelOk = checkObOk();
+		System.out.println(bLevelOk);
 		if(bLevelOk) {
 			fFrosch = new Frosch(Spielfeld.FELDER_X/2,Spielfeld.FELDER_Y-1);
+			alive = true;
+			
+			new Thread(new SpielfeldMoveObjects(this)).start();;
+			new Thread(new SpielfeldAddObject(this)).start();;
+			
+			System.out.println(Thread.activeCount());
 			bInLevel = true;
 			
 			addAuto();
@@ -125,8 +146,7 @@ public class Spielfeld extends JPanel {
 	
 	// Bewege Frosch
 	public void move(int iDirection) {
-		
-		if(bLevelOk) {
+		if(bLevelOk && alive) {
 			Koordinate k = new Koordinate(fFrosch.getCol(),fFrosch.getRow());
 			switch(iDirection) {
 				case 37: k = moveLeft(); break;
@@ -231,26 +251,42 @@ public class Spielfeld extends JPanel {
 	}
 	
 	public void checkAutos() {
+		lock.lock();
 		for(Auto a  : autos) {
-			
 			if(fFrosch.getPixY() == a.getY()) {
-				if(!(fFrosch.getPixX() > a.getX()+64 || fFrosch.getPixX()+64 < a.getX())) {
+				if(!(fFrosch.getPixX() > a.getX()+64 || fFrosch.getPixX()+32 < a.getX())) {
 					alive = false;
-					for(Thread t : threads) {
-						t.stop();
-					}
 				}
-				
 			}
-			
 		}
+		if(!alive) wennTod();
+		lock.unlock();
 	}
 	
+	
 	public void addAuto() {
-		Auto newAuto = new Auto(-64, 32, auto, 10, 1, this);
+		Auto newAuto = new Auto(-2, 14, auto, 4, 1, this);
+		Auto newAuto2 = new Auto(this.FELDER_X+2, 13, auto, 4, -1, this);
+		Auto newAuto3 = new Auto(this.FELDER_X+2, 12, auto, 3, -1, this);
+		lock.lock();
 		autos.add(newAuto);
-		Thread t = new Thread(newAuto);
-		threads.add(t);
-		t.start();
+		autos.add(newAuto2);
+		autos.add(newAuto3);
+		
+		lock.unlock();
+	}
+	
+	public void moveAutos() {
+		lock.lock();
+		for(Auto a : autos) {
+			a.bewegeVor();
+		}
+		this.repaint();
+		lock.unlock();
+		this.checkAutos();
+	}
+	
+	public void wennTod() {
+		SPIELFENSTER.btnSpielstart.setEnabled(true);
 	}
 }

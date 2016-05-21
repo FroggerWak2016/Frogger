@@ -7,36 +7,14 @@ public class Auto extends Thread {
 	private int x;
 	private int y;
 	private BufferedImage bBild;
-	private int iGeschwindigkeit;
+	private int iGeschwindigkeit; // Pixel / Sekunde
 	private int iRichtung; // 1 = links ; 2 = rechts
 	Spielfeld s;
 	
-	@Override
-	public void run() {
-		if(iRichtung == 1) {
-			while(x < Spielfeld.FELDER_X*32 && s.alive) {
-				x++;
-				s.checkAutos();
-				s.repaint();
-				
-				if(x == 100) s.addAuto();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			if(x >= Spielfeld.FELDER_X*32)
-				s.autos.remove(this);
-		}
-	}
-	
-	public Auto(int x, int y, BufferedImage bBild, int iGeschwindigkeit, int iRichtung, Spielfeld s) {
+	public Auto(int reihe, int spalte, BufferedImage bBild, int iGeschwindigkeit, int iRichtung, Spielfeld s) {
 		super();
-		this.x = x;
-		this.y = y;
+		this.x = reihe * 32;
+		this.y = spalte * 32;
 		this.bBild = bBild;
 		this.iGeschwindigkeit = iGeschwindigkeit;
 		this.iRichtung = iRichtung;
@@ -75,5 +53,11 @@ public class Auto extends Thread {
 		this.iGeschwindigkeit = geschwindigkeit;
 	}
 	
+	public void bewegeVor() {
+		if(this.iRichtung == 1)
+			x += iGeschwindigkeit;
+		else 
+			x-= iGeschwindigkeit;
+	}
 	
 }
