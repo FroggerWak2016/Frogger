@@ -1,15 +1,28 @@
 package v2;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-public abstract class AktionsReihe {
+public abstract class AktionsReihe extends Thread {
 
-	private int iGeschwindigkeit;	
-	private int iRichtung; 			// 1 = Rechts; -1 = Links
-	private int iWiederholung; 		// Sekunden, nachdem ein neues Auto auftaucht
-	private BufferedImage biBild;
-	private int iReihe;
+	protected int iGeschwindigkeit;	
+	protected int iRichtung; 			// 1 = Rechts; -1 = Links
+	protected int iWiederholung; 		// Sekunden, nachdem ein neues Auto auftaucht
+	protected BufferedImage biBild;
+	protected int iReihe;
+	protected Spielfeld spSpielfeld;
+	protected ArrayList<BewegendesObjekt> objekte = new ArrayList<BewegendesObjekt>();
 	
+	@Override
+	public String toString() {
+		return "AktionsReihe []";
+	}
+	public ArrayList<BewegendesObjekt> getObjekte() {
+		return objekte;
+	}
+	public void setObjekte(ArrayList<BewegendesObjekt> objekte) {
+		this.objekte = objekte;
+	}
 	public int getiReihe() {
 		return iReihe;
 	}
@@ -39,6 +52,12 @@ public abstract class AktionsReihe {
 	}
 	public void setiWiederholung(int iWiederholung) {
 		this.iWiederholung = iWiederholung;
+	}
+	public Spielfeld getSpSpielfeld() {
+		return spSpielfeld;
+	}
+	public void setSpSpielfeld(Spielfeld spSpielfeld) {
+		this.spSpielfeld = spSpielfeld;
 	}
 	
 	

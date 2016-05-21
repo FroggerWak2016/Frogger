@@ -11,8 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
-
 
 
 
@@ -25,11 +23,8 @@ public class Spielfeld extends JPanel {
 	public static int FELDSEITE = 32;
 	public static int FELDER_X = 15;
 	public static int FELDER_Y = 17;
-	
+	private BufferedImage background;
 	public Spielfenster SPIELFENSTER;
-	
-	private ArrayList<Thread> threads = new ArrayList<Thread>();
-	private ArrayList<Auto> autos = new ArrayList<Auto>();
 	
 	public boolean bInLevel = false;
 
@@ -48,6 +43,9 @@ public class Spielfeld extends JPanel {
 	private boolean bLebendig = true;
 	
 	private boolean bLevelOk;
+	
+	
+	protected ArrayList<AktionsReihe> aktionsreihen = new ArrayList<AktionsReihe>();
 	
 	public Spielfeld(Spielfenster spielfenster) {
 		
@@ -81,12 +79,15 @@ public class Spielfeld extends JPanel {
 			//Frosch formen
 			g2.drawImage(fFrosch.bgImage, fFrosch.getPixX(), fFrosch.getPixY(), 32, 32, null);
 			
-			
-			//Autos
-			for(Auto a : autos) {
-
-				g2.drawImage(auto, a.getX(), a.getY(), 64, 32, null);
+			lock.lock();
+			for(AktionsReihe reihe : aktionsreihen) {
+				System.out.println(reihe.objekte);
+				for(BewegendesObjekt b : reihe.objekte) {
+					g2.drawImage(reihe.getBiBild(), b.getX(), b.getY(), 64, 32, null);
+				}
 			}
+			lock.unlock();
+			
 			
 		} else {
 			
@@ -103,7 +104,7 @@ public class Spielfeld extends JPanel {
 	public void baueLevel(int iLevel) {
 		
 		lock.lock();
-		autos.clear();
+		aktionsreihen.clear();
 		lock.unlock();
 		
 		String[] sStructureAsArray = Utils.loadFileAsString("/level/level_"+iLevel+".txt").split("\\s");
@@ -127,18 +128,28 @@ public class Spielfeld extends JPanel {
 		}
 		 
 		bLevelOk = checkObOk();
-		System.out.println(bLevelOk);
+		
 		if(bLevelOk) {
+
+			
 			fFrosch = new Frosch(Spielfeld.FELDER_X/2,Spielfeld.FELDER_Y-1);
 			alive = true;
 			
 			new Thread(new SpielfeldMoveObjects(this)).start();;
-			new Thread(new SpielfeldAddObject(this)).start();;
+
+			Strasse s1 = new Strasse(14, 3, 1, 3, this, auto);
+			Strasse s2 = new Strasse(13, 4, 1, 4, this, auto);
+			Strasse s3 = new Strasse(12, 2, 1, 2, this, auto);
 			
-			System.out.println(Thread.activeCount());
+			aktionsreihen.add(s1);
+			aktionsreihen.add(s2);
+			aktionsreihen.add(s3);
+			
+			new Thread(s1).start();
+			new Thread(s2).start();
+			new Thread(s3).start();
+			
 			bInLevel = true;
-			
-			addAuto();
 			
 			repaint();
 		}
@@ -250,40 +261,23 @@ public class Spielfeld extends JPanel {
 		return !fehler;
 	}
 	
-	public void checkAutos() {
+	public void checkObAlive() {
 		lock.lock();
-		for(Auto a  : autos) {
-			if(fFrosch.getPixY() == a.getY()) {
-				if(!(fFrosch.getPixX() > a.getX()+64 || fFrosch.getPixX()+32 < a.getX())) {
-					alive = false;
+		for(AktionsReihe tmp : this.aktionsreihen) {
+			if(fFrosch.getRow() == tmp.iReihe) {
+			
+				for(BewegendesObjekt b : tmp.objekte) {
+	
+					if(!(fFrosch.getPixX() > b.getX()+64 || fFrosch.getPixX()+32 < b.getX())) {
+						alive = false;
+					}
 				}
 			}
+			
 		}
+			
 		if(!alive) wennTod();
 		lock.unlock();
-	}
-	
-	
-	public void addAuto() {
-		Auto newAuto = new Auto(-2, 14, auto, 4, 1, this);
-		Auto newAuto2 = new Auto(this.FELDER_X+2, 13, auto, 4, -1, this);
-		Auto newAuto3 = new Auto(this.FELDER_X+2, 12, auto, 3, -1, this);
-		lock.lock();
-		autos.add(newAuto);
-		autos.add(newAuto2);
-		autos.add(newAuto3);
-		
-		lock.unlock();
-	}
-	
-	public void moveAutos() {
-		lock.lock();
-		for(Auto a : autos) {
-			a.bewegeVor();
-		}
-		this.repaint();
-		lock.unlock();
-		this.checkAutos();
 	}
 	
 	public void wennTod() {
