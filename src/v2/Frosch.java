@@ -70,7 +70,7 @@ public class Frosch implements Runnable {
 		this.setRow(row);
 		
 		try {
-			this.bgImage = ImageIO.read(this.getClass().getResource(this.getPath())).getSubimage(0, 0, 32, 32);
+			this.bgImage = ImageIO.read(this.getClass().getResource(this.getPath())).getSubimage(0, 0, 35, 35);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,6 +108,10 @@ public class Frosch implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public KoordinateFein getCenter() {
+		return new KoordinateFein(this.getPixX()+17,this.getPixY()+17);
 	}
 	
 	/*

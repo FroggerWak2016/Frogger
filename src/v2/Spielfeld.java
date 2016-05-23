@@ -47,13 +47,13 @@ public class Spielfeld extends JPanel {
 		this.SPIELFENSTER = spielfenster;
 		// Hintergrundbilder laden
 		try {
-			biGrass = ImageIO.read(this.getClass().getResource("/backgrounds/grass.gif")).getSubimage(0, 0, 32, 32);
-			biWasser = ImageIO.read(this.getClass().getResource("/backgrounds/wasser.gif")).getSubimage(0, 0, 32, 32);
-			biBaum = ImageIO.read(this.getClass().getResource("/backgrounds/tree.png")).getSubimage(0, 0, 32, 32);
-			biStrasse = ImageIO.read(this.getClass().getResource("/backgrounds/strasse.png")).getSubimage(0, 0, 32, 32);
+			biGrass = ImageIO.read(this.getClass().getResource("/backgrounds/grass.png")).getSubimage(0, 0, 35, 35);
+			biWasser = ImageIO.read(this.getClass().getResource("/backgrounds/wasser.png")).getSubimage(0, 0, 35, 35);
+			biBaum = ImageIO.read(this.getClass().getResource("/backgrounds/baum.png")).getSubimage(0, 0, 35, 35);
+			biStrasse = ImageIO.read(this.getClass().getResource("/backgrounds/strasse.png")).getSubimage(0, 0,35, 35);
 			biAuto = ImageIO.read(this.getClass().getResource("/auto.png")).getSubimage(0, 0, 64, 32);
 			biAutoRueck = ImageIO.read(this.getClass().getResource("/auto_rueck.png")).getSubimage(0, 0, 64, 32);
-			biHolz = ImageIO.read(this.getClass().getResource("/auto2.png")).getSubimage(0, 0, 64, 32);
+			biHolz = ImageIO.read(this.getClass().getResource("/auto2.png")).getSubimage(0, 0, 70, 35);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -164,7 +164,14 @@ public class Spielfeld extends JPanel {
 	 */
 	public void move(int iDirection) {
 		lock.lock();
+		
 		if(bLevelOk && bLebendig) {
+			KoordinateFein kfCenter = frFrosch.getCenter();
+			KoordinateFein kfLinks = new KoordinateFein(frFrosch.getPixX(), frFrosch.getPixY());
+			KoordinateFein kfRechts = new KoordinateFein(frFrosch.getPixX()+34, frFrosch.getPixY());
+			
+			//KoordinateFein kf
+			/*
 			Koordinate k = new Koordinate(frFrosch.getCol(), frFrosch.getRow());
 			switch(iDirection) {
 				case 37: k = moveLeft(); break;
@@ -204,7 +211,7 @@ public class Spielfeld extends JPanel {
 					
 					repaint();
 				}
-			}
+			}*/
 		}
 		lock.unlock();
 		
