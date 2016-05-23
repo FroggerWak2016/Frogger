@@ -18,7 +18,7 @@ public class SpielfeldMoveObjects implements Runnable {
 	@Override
 	public void run() {
 		
-		while(spSpielfeld.bObjekteBewegen) { 																				// Wiederhole solange die Spielfigur am Leben ist
+		while(spSpielfeld.bLebendig) { 																				// Wiederhole solange die Spielfigur am Leben ist
 			spSpielfeld.lock.lock();																			// Verhindert parallelen Zugriff
 				
 				for(AktionsReihe arAktionsreihe : spSpielfeld.alAktionsreihen) {									// Iteriere über alle Aktionsreihen
@@ -31,6 +31,9 @@ public class SpielfeldMoveObjects implements Runnable {
 					arAktionsreihe.alObjekte.removeAll(toDelete);													// Löscht alle außerhalb liegenden Objekte
 					
 				}
+				
+				if(spSpielfeld.frFrosch.gethHolz() != null)
+					spSpielfeld.frFrosch.setPixX(spSpielfeld.frFrosch.getPixX()+(spSpielfeld.frFrosch.gethHolz().arAktionsreihe.iGeschwindigkeit *spSpielfeld.frFrosch.gethHolz().arAktionsreihe.iRichtung));
 				
 			spSpielfeld.lock.unlock();
 			

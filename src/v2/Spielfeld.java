@@ -39,7 +39,7 @@ public class Spielfeld extends JPanel {
 	private BufferedImage biAutoRueck;
 	private BufferedImage biHolz;
 	
-	private Frosch frFrosch;
+	public Frosch frFrosch;
 	
 	private Thread t;
 	public Spielfeld(Spielfenster spielfenster) {		
@@ -47,13 +47,13 @@ public class Spielfeld extends JPanel {
 		this.SPIELFENSTER = spielfenster;
 		// Hintergrundbilder laden
 		try {
-			biGrass = ImageIO.read(this.getClass().getResource("/backgrounds/grass.gif")).getSubimage(0, 0, 32, 32);
-			biWasser = ImageIO.read(this.getClass().getResource("/backgrounds/wasser.gif")).getSubimage(0, 0, 32, 32);
-			biBaum = ImageIO.read(this.getClass().getResource("/backgrounds/tree.png")).getSubimage(0, 0, 32, 32);
-			biStrasse = ImageIO.read(this.getClass().getResource("/backgrounds/strasse.png")).getSubimage(0, 0, 32, 32);
+			biGrass = ImageIO.read(this.getClass().getResource("/backgrounds/grass.png")).getSubimage(0, 0, 35, 35);
+			biWasser = ImageIO.read(this.getClass().getResource("/backgrounds/wasser.png")).getSubimage(0, 0, 35, 35);
+			biBaum = ImageIO.read(this.getClass().getResource("/backgrounds/baum.png")).getSubimage(0, 0, 35, 35);
+			biStrasse = ImageIO.read(this.getClass().getResource("/backgrounds/strasse.png")).getSubimage(0, 0,35, 35);
 			biAuto = ImageIO.read(this.getClass().getResource("/auto.png")).getSubimage(0, 0, 64, 32);
 			biAutoRueck = ImageIO.read(this.getClass().getResource("/auto_rueck.png")).getSubimage(0, 0, 64, 32);
-			biHolz = ImageIO.read(this.getClass().getResource("/holzstamm.png")).getSubimage(0, 0, 64, 32);
+			biHolz = ImageIO.read(this.getClass().getResource("/holzstamm.png")).getSubimage(0, 0, 70, 35);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,6 @@ public class Spielfeld extends JPanel {
 	
 	// Liest txt Datei ein und füllt ein mehrdimensionales Array mit Feldern
 	public void baueLevel(int iLevel) {
-		
 		alAktionsreihen.clear();
 		
 		String[] sStrukturAlsArray = Utils.loadFileAsString("/level/level_"+iLevel+".txt").split("\\s");
@@ -130,7 +129,7 @@ public class Spielfeld extends JPanel {
 			frFrosch = new Frosch(Settings.SPALTEN/2,Settings.REIHEN-1);
 			new Thread(frFrosch).start();
 			bLebendig = true;
-			
+
 			new Thread(new SpielfeldMoveObjects(this)).start();;
 
 			Strasse s1 = new Strasse(14, 3, 1, 3, this, biAuto);
@@ -140,7 +139,7 @@ public class Spielfeld extends JPanel {
 			Fluss f1 = new Fluss(1, 3, 1, 3, this, biHolz);
 			Fluss f2 = new Fluss(2, 3, -1, 3, this, biHolz);
 			Fluss f3 = new Fluss(5, 3, 1, 3, this, biHolz);
-			Fluss f4 = new Fluss(7, 3, -1, 3, this, biHolz);
+			Fluss f4 = new Fluss(7, 1, -1, 3, this, biHolz);
 			
 			alAktionsreihen.add(s1);
 			alAktionsreihen.add(s2);
@@ -154,7 +153,6 @@ public class Spielfeld extends JPanel {
 				new Thread(arAktionsreihe).start();
 			
 			bInLevel = true;
-			
 			repaint();
 		} else {
 			System.out.println("In der Levelstruktur ist ein Fehler!");
@@ -165,34 +163,41 @@ public class Spielfeld extends JPanel {
 	 * Diese Methode dient der Bewegung des Frosches
 	 */
 	public void move(int iDirection) {
-
+		lock.lock();
+		
 		if(bLevelOk && bLebendig) {
-			KoordinateFein kf = new KoordinateFein(frFrosch.getPixX(), frFrosch.getPixY());
+			KoordinateFein kfCenter = frFrosch.getCenter();
+			KoordinateFein kfLinks = new KoordinateFein(frFrosch.getPixX(), frFrosch.getPixY());
+			KoordinateFein kfRechts = new KoordinateFein(frFrosch.getPixX()+34, frFrosch.getPixY());
+			
+			//KoordinateFein kf
+			/*
+			Koordinate k = new Koordinate(frFrosch.getCol(), frFrosch.getRow());
 			switch(iDirection) {
-				case 37: kf = moveLeft(); break;
-				case 38: kf = moveUp(); break;
-				case 39: kf = moveRight(); break;
-				case 40: kf = moveDown(); break;
+				case 37: k = moveLeft(); break;
+				case 38: k = moveUp(); break;
+				case 39: k = moveRight(); break;
+				case 40: k = moveDown(); break;
 				default: break;
 			}
 			
-			if(inSpielfeld(kf.zuKoordinate())) { // ist in Spielfeld
-				Feld feldGehezu = alStruktur.get(kf.zuKoordinate().getY()).get(kf.zuKoordinate().getX());
+			if(inSpielfeld(k)) { // ist in Spielfeld
+				Feld feldGehezu = alStruktur.get(k.getY()).get(k.getX());
 				if(feldGehezu.isbZuganglich()) {					
 					
-					lock.lock();
-					frFrosch.moveTo(kf.zuKoordinate());
+					
+					frFrosch.moveTo(k);
 					frFrosch.sethHolz(null);
 					//Überprüfe Flüsse
 					BewegendesObjekt boAufObjekt = null;
 					for(AktionsReihe arAktionsreihe : alAktionsreihen) {
-						if(arAktionsreihe.getiReihe() == kf.zuKoordinate().getY() && arAktionsreihe.getClass() == Fluss.class) {
+						if(arAktionsreihe.getiReihe() == k.getY() && arAktionsreihe.getClass() == Fluss.class) {
 							boolean bLebendigTmp = false;
 							for(BewegendesObjekt hHolz : arAktionsreihe.getObjekte()) {
-								if(frFrosch.getPixX()+16 >= hHolz.getX() && frFrosch.getPixX() +16 <= hHolz.getX() + hHolz.getiBreite() ) {
+								if(frFrosch.getPixX()+17 >= hHolz.getX() && frFrosch.getPixX() +16 <= hHolz.getX() + hHolz.getiBreite() ) {
 									bLebendigTmp = true;
 									boAufObjekt = hHolz;
-									int iDiff = frFrosch.getPixX()+16 - hHolz.getX();
+									int iDiff = frFrosch.getPixX()+17 - hHolz.getX();
 									frFrosch.setPixX(hHolz.getX()+(int)(iDiff/32)*32);
 									break;
 								}
@@ -203,27 +208,27 @@ public class Spielfeld extends JPanel {
 					if(boAufObjekt != null) {
 						frFrosch.sethHolz(boAufObjekt);
 					}
-					lock.unlock();
 					
 					repaint();
 				}
-			}
+			}*/
 		}
+		lock.unlock();
 		
 	}
 	
 	// Funktionen zum Bewegen
-	private KoordinateFein moveUp() {
-		return new KoordinateFein(frFrosch.getPixX()+16, frFrosch.getPixY()-Settings.FELDPIXEL);
+	private Koordinate moveUp() {
+		return new Koordinate(frFrosch.getCol(), frFrosch.getRow()-1);
 	}
-	private KoordinateFein moveDown() {
-		return new KoordinateFein(frFrosch.getPixX()+16, frFrosch.getPixY()+Settings.FELDPIXEL);	
+	private Koordinate moveDown() {
+		return new Koordinate(frFrosch.getCol(), frFrosch.getRow()+1);	
 	}
-	private KoordinateFein moveLeft() {
-		return new KoordinateFein(frFrosch.getPixX()+16-Settings.FELDPIXEL, frFrosch.getPixY());	
+	private Koordinate moveLeft() {
+		return new Koordinate(frFrosch.getCol()-1, frFrosch.getRow());	
 	}
-	private KoordinateFein moveRight() {
-		return new KoordinateFein(frFrosch.getPixX()+16+Settings.FELDPIXEL, frFrosch.getPixY());	
+	private Koordinate moveRight() {
+		return new Koordinate(frFrosch.getCol()+1, frFrosch.getRow());	
 	}
 	
 	/*

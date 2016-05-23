@@ -24,6 +24,7 @@ public class Spielfenster extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public JButton btnSpielstart;
+	public Spielfeld pSpielplan;
 	/**
 	 * Launch the application.
 	 */
@@ -102,16 +103,18 @@ public class Spielfenster extends JFrame {
 		pSpielbar.setLayout(new BorderLayout(0, 0));
 		
 		
-		Spielfeld pSpielplan = new Spielfeld(this);
+		pSpielplan = new Spielfeld(this);
 		pSpiel.add(pSpielplan, "1, 3, fill, fill");
 		
 		
 		btnSpielstart = new JButton("Spielen");
 		btnSpielstart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pSpielplan.baueLevel(1);
-				btnSpielstart.setEnabled(false);
+				/*pSpielplan.baueLevel(1);
+				btnSpielstart.setEnabled(false);*/
 				SPIELFENSTER.setFocus();
+				//pSpielplan = new Spielfeld(SPIELFENSTER);
+				pSpielplan.baueLevel(1);
 			}
 		});
 		pEinstellungen.add(btnSpielstart, "1, 7, fill, fill");
