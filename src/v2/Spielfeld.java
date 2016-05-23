@@ -169,8 +169,24 @@ public class Spielfeld extends JPanel {
 			KoordinateFein kfCenter = frFrosch.getCenter();
 			KoordinateFein kfLinks = new KoordinateFein(frFrosch.getPixX(), frFrosch.getPixY());
 			KoordinateFein kfRechts = new KoordinateFein(frFrosch.getPixX()+34, frFrosch.getPixY());
+			System.out.println(kfCenter+ " - "+kfCenter.zuKoordinate());
 			
-			//KoordinateFein kf
+			KoordinateFein kfNeu = frFrosch.getCenter();
+			switch(iDirection) {
+				case 37: kfNeu = moveLeft2(kfNeu); break;
+				case 38: kfNeu = moveUp2(kfNeu); break;
+				case 39: kfNeu = moveRight2(kfNeu); break;
+				case 40: kfNeu = moveDown2(kfNeu); break;
+				default: break;
+			}
+			
+			if(inSpielfeld(kfNeu.zuKoordinate())) {
+				frFrosch.moveTo(kfNeu.zuKoordinate());
+				System.out.println(kfNeu+" - "+kfNeu.zuKoordinate());
+				System.out.println("Moved");
+				repaint();
+			}
+			//KoordinateFein kf = kfCenter.
 			/*
 			Koordinate k = new Koordinate(frFrosch.getCol(), frFrosch.getRow());
 			switch(iDirection) {
@@ -229,6 +245,20 @@ public class Spielfeld extends JPanel {
 	}
 	private Koordinate moveRight() {
 		return new Koordinate(frFrosch.getCol()+1, frFrosch.getRow());	
+	}
+	
+	// Funktionen zum Bewegen
+	private KoordinateFein moveUp2(KoordinateFein k) {
+		return new KoordinateFein(k.getX(), k.getY()-35);
+	}
+	private KoordinateFein moveDown2(KoordinateFein k) {
+		return new KoordinateFein(k.getX(), k.getY()+35);	
+	}
+	private KoordinateFein moveLeft2(KoordinateFein k) {
+		return new KoordinateFein(k.getX()-35, k.getY());	
+	}
+	private KoordinateFein moveRight2(KoordinateFein k) {
+		return new KoordinateFein(k.getX()+35, k.getY());	
 	}
 	
 	/*
@@ -302,7 +332,6 @@ public class Spielfeld extends JPanel {
 					for(BewegendesObjekt b : arAktionsreihe.alObjekte) {
 		
 						if(!(frFrosch.getPixX() > b.getX()+64 || frFrosch.getPixX()+32 < b.getX())) {
-							System.out.println("HA!");
 							bLebendig = false;
 						}
 					}

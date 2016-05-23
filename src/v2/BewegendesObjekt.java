@@ -45,7 +45,7 @@ public abstract class BewegendesObjekt {
 	public void bewegeVor() {
 		this.arAktionsreihe.spSpielfeld.lock.lock();		// Unterbindet Parallelzugriff
 		
-			if(this.getClass() == Holzstamm.class) System.out.println("holz");
+			//if(this.getClass() == Holzstamm.class) System.out.println("holz");
 			x += this.arAktionsreihe.iGeschwindigkeit * this.arAktionsreihe.iRichtung;
 		this.arAktionsreihe.spSpielfeld.lock.unlock();
 	}
