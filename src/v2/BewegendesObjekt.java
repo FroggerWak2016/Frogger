@@ -1,13 +1,11 @@
 package v2;
 
-import java.awt.image.BufferedImage;
-
 public abstract class BewegendesObjekt {
 
 
-	protected AktionsReihe reihe;
-	protected int x;
-	protected int y;
+	protected AktionsReihe arAktionsreihe; 	// Definiert in welche Reihe das Objekt liegt
+	protected int x;						// Definiert x-Position des Objektes
+	protected int y;						// Definiert y-Position des Objektes
 	
 
 	public int getX() {
@@ -24,25 +22,45 @@ public abstract class BewegendesObjekt {
 	
 	public void setY(int y) {
 		this.y = y;
+	}	
+	
+	public AktionsReihe getArAktionsreihe() {
+		return arAktionsreihe;
+	}
+
+	public void setArAktionsreihe(AktionsReihe arAktionsreihe) {
+		this.arAktionsreihe = arAktionsreihe;
+	}
+
+	public int getiHoehe() {
+		return this.getArAktionsreihe().getBiBild().getHeight();
+	}
+
+	public int getiBreite() {
+		return this.getArAktionsreihe().getBiBild().getWidth();
+	}
+
+
+	// Diese Methode bewegt das Objekt vor
+	public void bewegeVor() {
+		this.arAktionsreihe.spSpielfeld.lock.lock();		// Unterbindet Parallelzugriff
+			x += this.arAktionsreihe.iGeschwindigkeit * this.arAktionsreihe.iRichtung;
+		this.arAktionsreihe.spSpielfeld.lock.unlock();
 	}
 	
-	public void bewegeVor(int iGeschwindigkeit, int iRichtung) {
-		this.reihe.spSpielfeld.lock.lock();
-			x += iGeschwindigkeit*iRichtung;
-		this.reihe.spSpielfeld.lock.unlock();
+	// Gibt einen boolischen Wert zurück, abhängig, ob die Figur im Spielfeld ist, oder nicht
+	public boolean inSpielfeld(Spielfeld s) {
+		if(x >= (-1*this.getiBreite()) && x <= Settings.SPALTEN * Settings.FELDPIXEL) {
+			return true;
+		}
+		return false;
 	}
-	
 	@Override
 	public String toString() {
 		return "BewegendesObjekt [x=" + x + ", y=" + y + "]";
 	}
 	
-	public boolean inSpielfeld(Spielfeld s) {
-		if(x > -64 && x < Spielfeld.FELDER_X*32) {
-			return true;
-		}
-		return false;
-	}
+	
 
 	
 }

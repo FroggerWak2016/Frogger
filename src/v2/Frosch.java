@@ -5,13 +5,16 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Frosch {
+public class Frosch implements Runnable {
 
 	private int pixX;
 	private int pixY;
 	
 	private int col;
 	private int row;
+	
+	private boolean bAufHolz = false;
+	private BewegendesObjekt hHolz = null;
 	
 	private String path = "/fosch_neu.png";
 	BufferedImage bgImage;
@@ -87,6 +90,37 @@ public class Frosch {
 	public Dimension getPosition() {
 		Dimension d = new Dimension(this.getCol(), this.getRow());
 		return d;
+	}
+	
+	public boolean isbAufHolz() {
+		return bAufHolz;
+	}
+	public void setbAufHolz(boolean bAufHolz) {
+		this.bAufHolz = bAufHolz;
+	}
+	public BewegendesObjekt gethHolz() {
+		return hHolz;
+	}
+	public void sethHolz(BewegendesObjekt hHolz) {
+		this.hHolz = hHolz;
+	}
+	@Override
+	public void run() {
+	
+		while(true) {
+			if(hHolz != null) {
+				System.out.println(Thread.currentThread().getName()+" Bewege Frosch: ");
+				this.setPixX(this.getPixX()+(hHolz.arAktionsreihe.iGeschwindigkeit * hHolz.arAktionsreihe.iRichtung));
+				//this.setPixX(this.getPixX());
+			}
+			try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	

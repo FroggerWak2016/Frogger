@@ -11,7 +11,7 @@ public class SpielfeldRepaint implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(s.alive) {
+		while(s.bLebendig) {
 			s.repaint();
 		
 			try {

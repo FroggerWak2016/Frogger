@@ -1,46 +1,44 @@
 package v2;
 
 import java.util.ArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
+/* 
+ * Diese Klasse bewegt alle n ms Alle Objekte auf dem Spielfeld um die in den jeweiligen Aktionsreihen definierten Felder (iGeschwindikkeit) vor.
+ * Diese Klasse wird wiederholend ausgeführt, solange die Spielfigur am Leben ist.
+ */
 
 public class SpielfeldMoveObjects implements Runnable {
-	final Lock lock = new ReentrantLock();
-	private Spielfeld s;
+
+	private Spielfeld spSpielfeld;
 	
 	public SpielfeldMoveObjects(Spielfeld sSpielfeld) {
-		this.s = sSpielfeld;
+		this.spSpielfeld = sSpielfeld;
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		while(s.alive) {
-			s.lock.lock();
-//			System.out.println("Zugriff auf Reihen: SMO: "+s.aktionsreihen);
-			for(AktionsReihe tmp : s.aktionsreihen) {
-
-				ArrayList<BewegendesObjekt> toDelete = new ArrayList<BewegendesObjekt>();
-//				System.out.println("Zugriff auf Objekte: SMO: "+tmp.objekte);
-				for(BewegendesObjekt b : tmp.objekte) {
-
-					
-					b.bewegeVor(tmp.iGeschwindigkeit, tmp.iRichtung);
-					if(!b.inSpielfeld(s)) toDelete.add(b);
-				}
-				tmp.objekte.removeAll(toDelete);
-//				System.out.println("Zugriff auf Objekte ENDE: SMO: "+tmp.objekte);
+		
+		while(spSpielfeld.bObjekteBewegen) { 																				// Wiederhole solange die Spielfigur am Leben ist
+			spSpielfeld.lock.lock();																			// Verhindert parallelen Zugriff
 				
-			}
-//			System.out.println("Zugriff auf Reihen ENDE: SMO: "+s.aktionsreihen);
+				for(AktionsReihe arAktionsreihe : spSpielfeld.alAktionsreihen) {									// Iteriere über alle Aktionsreihen
+					ArrayList<BewegendesObjekt> toDelete = new ArrayList<BewegendesObjekt>();					// Array zum späteren Löschen von bewegenden Elementen, die aus dem Spielfeld sind
+					for(BewegendesObjekt boBewegendesObjekt : arAktionsreihe.alObjekte) {							// Itereiere über alle bewegenden Objekte dieser Aktionsreihe
+						boBewegendesObjekt.bewegeVor();															// Bewege das Objekt vor
+						if(!boBewegendesObjekt.inSpielfeld(spSpielfeld)) 										// Wenn außerhalb Spielfeld: 
+							toDelete.add(boBewegendesObjekt);													// Füge das Objekt der Liste zu löschender Objekte hinzu
+					}
+					arAktionsreihe.alObjekte.removeAll(toDelete);													// Löscht alle außerhalb liegenden Objekte
+					
+				}
+				
+			spSpielfeld.lock.unlock();
 			
-			s.lock.unlock();
+			spSpielfeld.repaint();				// Repainte Spielfeld
 			
-			s.repaint();
 			try {
-				Thread.sleep(30);
+				Thread.sleep(30);				// Unterbreche für 30 ms
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

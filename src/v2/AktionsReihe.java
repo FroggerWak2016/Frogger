@@ -11,17 +11,17 @@ public abstract class AktionsReihe extends Thread {
 	protected BufferedImage biBild;
 	protected int iReihe;
 	protected Spielfeld spSpielfeld;
-	protected ArrayList<BewegendesObjekt> objekte = new ArrayList<BewegendesObjekt>();
+	protected ArrayList<BewegendesObjekt> alObjekte = new ArrayList<BewegendesObjekt>();
 	
 	@Override
 	public String toString() {
 		return "AktionsReihe []";
 	}
 	public ArrayList<BewegendesObjekt> getObjekte() {
-		return objekte;
+		return alObjekte;
 	}
 	public void setObjekte(ArrayList<BewegendesObjekt> objekte) {
-		this.objekte = objekte;
+		this.alObjekte = objekte;
 	}
 	public int getiReihe() {
 		return iReihe;

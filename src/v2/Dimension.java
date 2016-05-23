@@ -32,7 +32,7 @@ public class Dimension {
 	public String toString() {
 		return "Dimension [width=" + width + ", height=" + height + "]";
 	}
-	
+
 	
 	
 }

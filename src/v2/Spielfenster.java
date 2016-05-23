@@ -105,6 +105,7 @@ public class Spielfenster extends JFrame {
 		Spielfeld pSpielplan = new Spielfeld(this);
 		pSpiel.add(pSpielplan, "1, 3, fill, fill");
 		
+		
 		btnSpielstart = new JButton("Spielen");
 		btnSpielstart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -116,6 +117,7 @@ public class Spielfenster extends JFrame {
 		pEinstellungen.add(btnSpielstart, "1, 7, fill, fill");
 		
 		JButton btnBuilder = new JButton("Builder");
+		btnBuilder.setFocusable(false);
 		btnBuilder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

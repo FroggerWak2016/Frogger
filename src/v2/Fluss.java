@@ -2,9 +2,8 @@ package v2;
 
 import java.awt.image.BufferedImage;
 
-public class Strasse extends AktionsReihe implements Runnable {
-	
-	
+public class Fluss extends AktionsReihe {
+
 	@Override
 	public void run() {
 		
@@ -16,20 +15,19 @@ public class Strasse extends AktionsReihe implements Runnable {
 				e.printStackTrace();
 			}
 
-			this.spSpielfeld.lock.lock();  							// Verhindere parallelen Zugriff
+			this.spSpielfeld.lock.lock();  								// Verhindere parallelen Zugriff
 				int iSpalte = -2;
-				if(iRichtung < 0)  iSpalte = 15;					// Definiere Startspalte
+				if(iRichtung < 0)  iSpalte = 15;						// Definiere Startspalte
 				
-				Auto a = new Auto(this.iReihe, iSpalte, this);		// Erstellt ein neues Auto
-				this.alObjekte.add(a);								// Füge das Auto des Liste von Objekten hinzu
+				Holzstamm h = new Holzstamm(this.iReihe, iSpalte, this);// Erstellt ein neues Auto
+				this.alObjekte.add(h);									// Füge das Auto des Liste von Objekten hinzu
 					
 			this.spSpielfeld.lock.unlock();
 		}
 		
 	}
 	
-	
-	public Strasse(int iReihe, int iGeschwindigkeit, int iRichtung, int iWiederholung, Spielfeld spSpielfeld, BufferedImage biBild) {
+	public Fluss(int iReihe, int iGeschwindigkeit, int iRichtung, int iWiederholung, Spielfeld spSpielfeld, BufferedImage biBild) {
 		this.setiReihe(iReihe);
 		this.setiGeschwindigkeit(iGeschwindigkeit);
 		this.setiRichtung(iRichtung);
@@ -37,5 +35,4 @@ public class Strasse extends AktionsReihe implements Runnable {
 		this.setSpSpielfeld(spSpielfeld);
 		this.setBiBild(biBild);
 	}
-
 }
