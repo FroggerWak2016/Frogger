@@ -53,7 +53,7 @@ public class Spielfeld extends JPanel {
 			biStrasse = ImageIO.read(this.getClass().getResource("/backgrounds/strasse.png")).getSubimage(0, 0, 32, 32);
 			biAuto = ImageIO.read(this.getClass().getResource("/auto.png")).getSubimage(0, 0, 64, 32);
 			biAutoRueck = ImageIO.read(this.getClass().getResource("/auto_rueck.png")).getSubimage(0, 0, 64, 32);
-			biHolz = ImageIO.read(this.getClass().getResource("/auto2.png")).getSubimage(0, 0, 64, 32);
+			biHolz = ImageIO.read(this.getClass().getResource("/holzstamm.png")).getSubimage(0, 0, 64, 32);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
