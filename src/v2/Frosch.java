@@ -16,21 +16,21 @@ public class Frosch implements Runnable {
 	private boolean bAufHolz = false;
 	private BewegendesObjekt hHolz = null;
 	
-	private String path = "/fosch_neu.png";
+	private String path = "/frosch2.png";
 	BufferedImage bgImage;
 	
 	public int getCol() {
 		return col;
 	}
 	public void setCol(int col) {
-		this.pixX = 32*col;
+		this.pixX = Settings.FELDPIXEL*col;
 		this.col = col;
 	}
 	public int getRow() {
 		return row;
 	}
 	public void setRow(int row) {
-		this.pixY = row*32;
+		this.pixY = row*Settings.FELDPIXEL;
 		this.row = row;
 	}
 	public String getPath() {
@@ -52,7 +52,7 @@ public class Frosch implements Runnable {
 	
 	public void setPixX(int pixX) {
 		this.pixX = pixX;
-		this.col = (int)pixX/32;
+		this.col = (int)pixX/Settings.FELDPIXEL;
 	}
 	
 	public int getPixY() {
@@ -61,7 +61,7 @@ public class Frosch implements Runnable {
 	
 	public void setPixY(int pixY) {
 		this.pixY = pixY;
-		this.row = (int)pixY/32;
+		this.row = (int)pixY/Settings.FELDPIXEL;
 	}
 	
 	public Frosch(int col, int row){
@@ -106,6 +106,13 @@ public class Frosch implements Runnable {
 	}
 	@Override
 	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/*
+	@Override
+	public void run() {
 	
 		while(true) {
 			if(hHolz != null) {
@@ -121,7 +128,7 @@ public class Frosch implements Runnable {
 			}
 		}
 		
-	}
+	}*/
 	
 	
 	

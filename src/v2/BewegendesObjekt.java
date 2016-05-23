@@ -6,7 +6,7 @@ public abstract class BewegendesObjekt {
 	protected AktionsReihe arAktionsreihe; 	// Definiert in welche Reihe das Objekt liegt
 	protected int x;						// Definiert x-Position des Objektes
 	protected int y;						// Definiert y-Position des Objektes
-	
+	protected boolean hasObjekt;
 
 	public int getX() {
 		return x;
@@ -44,6 +44,8 @@ public abstract class BewegendesObjekt {
 	// Diese Methode bewegt das Objekt vor
 	public void bewegeVor() {
 		this.arAktionsreihe.spSpielfeld.lock.lock();		// Unterbindet Parallelzugriff
+		
+			if(this.getClass() == Holzstamm.class) System.out.println("holz");
 			x += this.arAktionsreihe.iGeschwindigkeit * this.arAktionsreihe.iRichtung;
 		this.arAktionsreihe.spSpielfeld.lock.unlock();
 	}
