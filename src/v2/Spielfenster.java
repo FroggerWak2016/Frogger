@@ -46,17 +46,17 @@ public class Spielfenster extends JFrame {
 		Spielfenster SPIELFENSTER = this;
 		
 		this.setResizable(false);
-		this.setBounds(100, 100, 693, 630);
+		this.setBounds(100, 100, 738, 681);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("480px"),
+				ColumnSpec.decode("525px"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("590px"),
+				RowSpec.decode("641px"),
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		
@@ -95,7 +95,7 @@ public class Spielfenster extends JFrame {
 			new RowSpec[] {
 				RowSpec.decode("7px"),
 				RowSpec.decode("default:grow"),
-				RowSpec.decode("540px"),}));
+				RowSpec.decode("596px"),}));
 		
 		JPanel pSpielbar = new JPanel();
 		pSpielbar.setBorder(new TitledBorder(null, null, TitledBorder.LEADING, TitledBorder.TOP, null, null));
