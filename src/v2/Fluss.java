@@ -19,9 +19,22 @@ public class Fluss extends AktionsReihe {
 				int iSpalte = -2;
 				if(iRichtung < 0)  iSpalte = 15;						// Definiere Startspalte
 				
-				Holzstamm h = new Holzstamm(this.iReihe, iSpalte, this);// Erstellt ein neues Auto
-				this.alObjekte.add(h);									// Füge das Auto des Liste von Objekten hinzu
-					
+				boolean bReicht = true;
+				for(BewegendesObjekt boObjekt : this.alObjekte) {
+					if(this.iRichtung > 0) {
+						if(boObjekt.getX() <= 35) bReicht = false;
+						break;
+					} else {
+						if(boObjekt.getX()+boObjekt.getiBreite() >= 14*35) {
+							bReicht = false;
+							break;
+						}
+					}
+				}
+				if(bReicht) {
+					Holzstamm h = new Holzstamm(this.iReihe, iSpalte, this);// Erstellt ein neues Auto
+					this.alObjekte.add(h);									// Füge das Auto des Liste von Objekten hinzu
+				}
 			this.spSpielfeld.lock.unlock();
 		}
 		

@@ -77,9 +77,9 @@ public class Frosch implements Runnable {
 		}
 	}
 	
-	public void moveTo(Koordinate d) {
-		this.setCol(d.getX());
-		this.setRow(d.getY());
+	public void moveTo(KoordinateFein d) {
+		this.setPixX(d.getX());
+		this.setPixY(d.getY());
 	}
 	
 	public void moveTo(int x, int y) {

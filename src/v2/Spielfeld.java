@@ -166,10 +166,6 @@ public class Spielfeld extends JPanel {
 		lock.lock();
 		
 		if(bLevelOk && bLebendig) {
-			KoordinateFein kfCenter = frFrosch.getCenter();
-			KoordinateFein kfLinks = new KoordinateFein(frFrosch.getPixX(), frFrosch.getPixY());
-			KoordinateFein kfRechts = new KoordinateFein(frFrosch.getPixX()+34, frFrosch.getPixY());
-			System.out.println(kfCenter+ " - "+kfCenter.zuKoordinate());
 			
 			KoordinateFein kfNeu = frFrosch.getCenter();
 			switch(iDirection) {
@@ -181,10 +177,30 @@ public class Spielfeld extends JPanel {
 			}
 			
 			if(inSpielfeld(kfNeu.zuKoordinate())) {
-				frFrosch.moveTo(kfNeu.zuKoordinate());
-				System.out.println(kfNeu+" - "+kfNeu.zuKoordinate());
-				System.out.println("Moved");
-				repaint();
+				if(alStruktur.get(kfNeu.zuKoordinate().getY()).get(kfNeu.zuKoordinate().getX()).isbZuganglich()	) {
+					
+					boolean bOk = true;
+					BewegendesObjekt boObjekt = null;
+					for(AktionsReihe arAktionsReihe : alAktionsreihen) {
+						if(arAktionsReihe.iReihe == kfNeu.zuKoordinate().getY() && arAktionsReihe.getClass() == Fluss.class) {
+							bOk = false;
+							for(BewegendesObjekt boObjektTmp : arAktionsReihe.alObjekte) {
+								if(boObjektTmp.x <= kfNeu.getX() && boObjektTmp.x+70 >= kfNeu.getX()) {
+									bOk = true;
+									boObjekt = boObjektTmp;
+									kfNeu.setX(boObjekt.x);
+								}
+							}
+						}
+					}
+					frFrosch.moveTo(kfNeu);
+					if(!bOk) {
+						bLebendig = false;
+					} else {
+						frFrosch.sethHolz(boObjekt);
+					}
+					repaint();
+				}
 			}
 			//KoordinateFein kf = kfCenter.
 			/*
